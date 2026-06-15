@@ -275,7 +275,6 @@ export default function ToolProcessor({ tool }: Props) {
                     background: 'var(--bg)',
                     border: '1px solid var(--card-border)',
                     color: 'var(--text)',
-                    ringColor: 'var(--primary)',
                   }}
                 >
                   {opt.options?.map((o) => (

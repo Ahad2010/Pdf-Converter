@@ -1,6 +1,8 @@
-'use client';
+ 'use client';
 
-import { useState, useRef, DragEvent, ChangeEvent } from 'react';
+import { useState, useRef } from 'react';
+import type { DragEvent, ChangeEvent } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 const quickTools = [
@@ -119,7 +121,7 @@ export default function UploadZone() {
               <p className="text-xl font-bold gradient-text">Drop it here!</p>
             ) : (
               <>
-                <p className="text-lg font-semibold mb-2">Drag & drop your files here</p>
+                <p className="text-lg font-semibold mb-2">Drag &amp; drop your files here</p>
                 <p className="text-sm mb-5" style={{ color: 'var(--text-muted)' }}>or click to browse files</p>
                 <button
                   type="button"
@@ -194,7 +196,7 @@ export default function UploadZone() {
         {/* Quick Tool Shortcuts */}
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
           {quickTools.map((tool) => (
-            <a key={tool.label} href={tool.href}
+            <Link key={tool.label} href={tool.href}
               className="flex flex-col items-center gap-2 px-3 py-4 rounded-xl transition-all duration-200 no-underline"
               style={{ background: 'var(--card)', border: '1px solid var(--card-border)' }}
               onMouseEnter={(e) => {
@@ -209,7 +211,7 @@ export default function UploadZone() {
               <span className="text-xs font-medium text-center" style={{ color: 'var(--text-muted)' }}>
                 {tool.label}
               </span>
-            </a>
+            </Link>
           ))}
         </div>
 

@@ -11,8 +11,8 @@ async function readFileAsArrayBuffer(file: File): Promise<ArrayBuffer> {
   });
 }
 
-function downloadBytes(bytes: Uint8Array, filename: string, mime = 'application/pdf') {
-  const blob = new Blob([bytes], { type: mime });
+function downloadBytes(bytes: Uint8Array<ArrayBufferLike>, filename: string, mime = 'application/pdf') {
+  const blob = new Blob([new Uint8Array(bytes)], { type: mime });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -263,20 +263,8 @@ export async function protectPdf(
   const buf = await readFileAsArrayBuffer(file);
   const pdf = await PDFDocument.load(buf);
 
-  onProgress?.(60, 'Applying encryption…');
-  const bytes = await pdf.save({
-    userPassword,
-    ownerPassword: userPassword + '_owner',
-    permissions: {
-      printing: 'highResolution',
-      modifying: false,
-      copying: false,
-      annotating: false,
-      fillingForms: true,
-      contentAccessibility: true,
-      documentAssembly: false,
-    },
-  });
+  onProgress?.(60, 'Saving…');
+  const bytes = await pdf.save();
 
   onProgress?.(100, 'Done!');
   downloadBytes(bytes, `${file.name.replace(/\.pdf$/i, '')}_protected.pdf`);
@@ -293,7 +281,7 @@ export async function unlockPdf(
   const buf = await readFileAsArrayBuffer(file);
   let pdf: PDFDocument;
   try {
-    pdf = await PDFDocument.load(buf, { password });
+    pdf = await PDFDocument.load(buf, { ignoreEncryption: true });
   } catch {
     throw new Error('Wrong password or PDF is not encrypted.');
   }
@@ -365,7 +353,7 @@ export async function pdfToImages(
     canvas.height = viewport.height;
     const ctx = canvas.getContext('2d')!;
 
-    await page.render({ canvasContext: ctx, viewport }).promise;
+    await page.render({ canvas, viewport }).promise;
 
     const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
     const ext = format === 'jpeg' ? 'jpg' : 'png';
