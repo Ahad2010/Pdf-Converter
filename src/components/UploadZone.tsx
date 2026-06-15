@@ -82,7 +82,7 @@ export default function UploadZone() {
             onChange={handleChange}
           />
 
-          {/* Drop Zone */}
+          {/* Drop Zone for pdf tool*/}
           <div
             className={`upload-zone rounded-xl p-12 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${isDragging ? 'dragover' : ''}`}
             onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
